@@ -1,7 +1,9 @@
 const mongoose = require("mongoose")
 
 async function dbconnection (params) {
-    const dbconnect = await mongoose.connect("mongodb://localhost:27017/todo" , { useNewUrlParser: true }).catch((err) => {
+    // console.log(process.env.DATABASE)
+    // "mongodb://localhost:27017/todo"
+    const dbconnect = await mongoose.connect(process.env.DATABASE , { useNewUrlParser: true }).catch((err) => {
         console.log(err)
     })
     
