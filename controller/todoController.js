@@ -1,11 +1,15 @@
 const todo = require("../model/todo")
+const moment = require("moment")
 
 exports.addTodo = async (req, res) => {
     try {
         
         const { todos , status } = req.body;
 
-        const addtodo = await todo.create({ user : req.userId._id , todo : todos , status : status })
+        const curr_date = moment().format('MMMM Do YYYY, h:mm:ss a'); // March 29th 2023, 3:35:58 pm
+        // console.log(curr_date , typeof curr_date)
+
+        const addtodo = await todo.create({ user : req.userId._id , todo : todos , status : status , start_date : curr_date })
 
         if (!addtodo) {
             res.status(400).json({
@@ -26,7 +30,7 @@ exports.addTodo = async (req, res) => {
         }
 
     } catch (error) {
-        // console.log(error)
+        console.log(error)
         res.status(400).json({
             status : false,
             error : "something went wrong while adding todo ... "
@@ -83,9 +87,22 @@ exports.updateTodo = async (req, res) => {
         
         if (findTodos) {
 
-            const updateTodo = await todo.findByIdAndUpdate(req.params.id , {
-                todo : todos , status
-            } , { new : true })
+            let updateTodo
+
+            if (status == "Completed") {
+
+                const curr_date = moment().format('MMMM Do YYYY, h:mm:ss a'); // March 29th 2023, 3:35:58 pm
+                
+                updateTodo = await todo.findByIdAndUpdate(req.params.id , {
+                    todo : todos , status , end_date : curr_date
+                } , { new : true })
+
+            }else {
+                updateTodo = await todo.findByIdAndUpdate(req.params.id , {
+                    todo : todos , status
+                } , { new : true })
+            }
+
 
             if (!updateTodo) {   
                 res.status(400).json({

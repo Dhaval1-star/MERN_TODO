@@ -11,6 +11,12 @@ const todos = mongoose.Schema({
     status : {
         type : String,
         enum : ["Pending" , "Completed"]
+    },
+    start_date : {
+        type : String
+    },
+    end_date : {
+        type : String
     }
 })
 
